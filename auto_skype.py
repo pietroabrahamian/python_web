@@ -15,8 +15,10 @@ import customtkinter as ctk
 
 def criar_skype():
     # Caminho para o WebDriver
-    service = Service(r"C:\Users\pietro.abrahamian\Downloads\chromedriver-win64\chromedriver.exe")
-    driver = webdriver.Chrome(service=service)
+    service_home= Service(r"C:\Users\Intel\Downloads\chromedriver-win64\chromedriver.exe")
+    # service = Service(r"C:\Users\pietro.abrahamian\Downloads\chromedriver-win64\chromedriver.exe")
+    # driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service_home)
 
     # URL do site
     driver.get(f"https://signup.live.com/signup?lcid=1033&wa=wsignin1.0&rpsnv=171&ct=1739990668&rver=7.5.2156.0&wp=MBI_SSL&wreply=https%3a%2f%2flw.skype.com%2flogin%2foauth%2fproxy%3fclient_id%3d578134%26redirect_uri%3dhttps%253A%252F%252Fweb.skype.com%26source%3dscomnav%26form%3dmicrosoft_registration%26fl%3dphone2&lc=1033&id=293290&mkt=pt-BR&psi=skype&lw=1&cobrandid=2befc4b5-19e3-46e8-8347-77317a16a5a5&client_flight=ReservedFlight33%2CReservedFligh&fl=phone2&lic=1&uaid=95e019bb4f1342199eddb75c83401474")
@@ -44,7 +46,6 @@ def criar_skype():
     nome_input = wait.until(EC.visibility_of_element_located((By.ID, "firstNameInput")))
     nome_input.send_keys(nome)
     nome_input.send_keys(Keys.RETURN)
-
     sobrenome_input = wait.until(EC.visibility_of_element_located((By.ID, "lastNameInput")))
     sobrenome_input.send_keys(sobrenome)
     sobrenome_input.send_keys(Keys.RETURN)
@@ -71,14 +72,19 @@ def criar_skype():
     abas = driver.window_handles
     driver.switch_to.window(abas[1]) #vai para a segunda aba, logo, o link q foi aberto
 
+    #  entrar no webmail mandic
     email_madic_input = wait.until(EC.visibility_of_element_located((By.ID, "login_username")))
     email_madic_input.click()
     email_madic_input.send_keys(email)
 
     senha_mandic_input = wait.until(EC.visibility_of_element_located((By.ID, "secretkey")))
-    # senha_mandic_input.click()
     senha_mandic_input.send_keys(senha)
     senha_mandic_input.send_keys(Keys.RETURN)
+
+    caixa_entrada = wait.until(EC.visibility_of_element_located((By.ID, "extdd-1")))
+    caixa_entrada.click()
+    email_outlook = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "x-grid3-row x-grid3-row-first")))
+    email_outlook.click()
 
 
 
