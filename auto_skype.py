@@ -4,8 +4,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.action_chains import ActionChains
+import os
 # import pyautogui
-# import time
+import time
 
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -15,13 +17,20 @@ import customtkinter as ctk
 
 def criar_skype():
     # Caminho para o WebDriver
-    service_home= Service(r"C:\Users\Intel\Downloads\chromedriver-win64\chromedriver.exe")
+    # service_home= Service(r"C:\Users\Intel\Downloads\chromedriver-win64\chromedriver.exe")
+    # driver = webdriver.Chrome(service=service_home)
+    diretorio_atual = os.path.dirname(os.path.abspath(__file__))
+    caminho_webdriver = os.path.join(diretorio_atual, "chromedriver.exe")
+    service = Service(caminho_webdriver)
+    driver = webdriver.Chrome(service=service)
     # service = Service(r"C:\Users\pietro.abrahamian\Downloads\chromedriver-win64\chromedriver.exe")
     # driver = webdriver.Chrome(service=service)
-    driver = webdriver.Chrome(service=service_home)
+
 
     # URL do site
     driver.get(f"https://signup.live.com/signup?lcid=1033&wa=wsignin1.0&rpsnv=171&ct=1739990668&rver=7.5.2156.0&wp=MBI_SSL&wreply=https%3a%2f%2flw.skype.com%2flogin%2foauth%2fproxy%3fclient_id%3d578134%26redirect_uri%3dhttps%253A%252F%252Fweb.skype.com%26source%3dscomnav%26form%3dmicrosoft_registration%26fl%3dphone2&lc=1033&id=293290&mkt=pt-BR&psi=skype&lw=1&cobrandid=2befc4b5-19e3-46e8-8347-77317a16a5a5&client_flight=ReservedFlight33%2CReservedFligh&fl=phone2&lic=1&uaid=95e019bb4f1342199eddb75c83401474")
+
+    
 
     wait = WebDriverWait(driver, 10) #tempo de espera: 10s
 
@@ -61,32 +70,35 @@ def criar_skype():
     mes.click()
     ano_input = wait.until(EC.visibility_of_element_located((By.ID, 'BirthYear')))
     ano_input.send_keys("2000")
-    ano_input.click()
     ano_input.send_keys(Keys.RETURN)
 
 
     #abre um link em uma nova aba
     driver.execute_script("window.open('https://webmail.mandic.com.br/', '_blank');") 
 
-    #guarda uma lista de todas as abas dentro de uma variavel
+    #guarda uma lista de todas as abas dentro de uma variavel    
     abas = driver.window_handles
     driver.switch_to.window(abas[1]) #vai para a segunda aba, logo, o link q foi aberto
 
     #  entrar no webmail mandic
     email_madic_input = wait.until(EC.visibility_of_element_located((By.ID, "login_username")))
-    email_madic_input.click()
     email_madic_input.send_keys(email)
 
     senha_mandic_input = wait.until(EC.visibility_of_element_located((By.ID, "secretkey")))
     senha_mandic_input.send_keys(senha)
     senha_mandic_input.send_keys(Keys.RETURN)
 
+    # entra na caixa de entrada e entra no primeiro email da caixa
     caixa_entrada = wait.until(EC.visibility_of_element_located((By.ID, "extdd-1")))
     caixa_entrada.click()
-    email_outlook = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "x-grid3-row x-grid3-row-first")))
-    email_outlook.click()
-
-
+    #clica no email com esse titulo
+    email_outlook = wait.until(EC.visibility_of_element_located((By.XPATH, '//div[text()="Verifique seu endereço de email"]')))
+    #da double.click para abrir o email
+    acoes = ActionChains(driver)
+    acoes.double_click(email_outlook).perform()
+    janela.after(1000, janela.destroy)
+    time.sleep(3600)
+    
 
 
 
@@ -94,6 +106,7 @@ def criar_skype():
 janela = tk.Tk()
 janela.title("Gerador de Skype")
 janela.geometry("500x200")
+
 
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
